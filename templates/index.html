@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Layer Protocol Visualizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+    <div>
+        <h1>Application Layer Protocol Visualizer</h1>
+        <p>Computer Networks • DNS • HTTP • SMTP</p>
+    </div>
+    <div class="badge">SIMULATION MODE</div>
+</header>
+
+<main class="dashboard">
+    <!-- PANEL 1 -->
+    <section class="panel activity-panel">
+        <div class="panel-heading">
+            <div>
+                <span class="eyebrow">PANEL 01</span>
+                <h2>Activity</h2>
+            </div>
+            <span id="statusDot" class="status-dot"></span>
+        </div>
+
+        <div class="activity-tabs">
+            <button class="tab active" data-mode="browsing">🌐 Browsing</button>
+            <button class="tab" data-mode="mail">✉️ Mail</button>
+            <button class="tab" data-mode="streaming">▶ Streaming</button>
+        </div>
+
+        <div id="browsingBox" class="activity-box">
+            <label for="urlInput">URL</label>
+            <input id="urlInput" value="https://example.com" placeholder="Enter a URL">
+            <button id="visitBtn" class="primary">Visit Page</button>
+            <p class="hint">Simulates DNS resolution followed by an HTTP request/response.</p>
+        </div>
+
+        <div id="mailBox" class="activity-box hidden">
+            <label for="toInput">To</label>
+            <input id="toInput" value="receiver@example.net" placeholder="recipient@example.com">
+            <label for="subjectInput">Subject</label>
+            <input id="subjectInput" value="Assignment Demo" placeholder="Subject">
+            <label for="bodyInput">Body</label>
+            <textarea id="bodyInput" rows="5" placeholder="Write your email...">Hello, this is a simulated email.</textarea>
+            <button id="sendBtn" class="primary">Send Email</button>
+            <p class="hint">Simulates an SMTP conversation: EHLO → MAIL FROM → RCPT TO → DATA → QUIT.</p>
+        </div>
+
+        <div id="streamingBox" class="activity-box hidden">
+            <label for="qualitySelect">Video Quality</label>
+            <select id="qualitySelect">
+                <option>360p</option>
+                <option selected>720p</option>
+                <option>1080p</option>
+            </select>
+            <div class="player">
+                <div class="play-icon">▶</div>
+                <div>
+                    <strong>Network Fundamentals — Demo Stream</strong>
+                    <span id="streamState">Ready to play</span>
+                </div>
+            </div>
+            <div class="stream-buttons">
+                <button id="playBtn" class="primary">▶ Play</button>
+                <button id="pauseBtn" class="secondary">Ⅱ Pause</button>
+            </div>
+            <p class="hint">Simulates DNS + HTTP manifest/playlist + video segment requests.</p>
+        </div>
+
+        <div class="activity-log">
+            <div class="section-title">Activity Log</div>
+            <div id="activityLog">
+                <div class="empty">Choose an activity and perform it.</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PANEL 2 -->
+    <section class="panel protocol-panel">
+        <div class="panel-heading">
+            <div>
+                <span class="eyebrow">PANEL 02</span>
+                <h2>Protocol Visualization</h2>
+            </div>
+            <span id="protocolName" class="protocol-chip">Waiting</span>
+        </div>
+
+        <div class="visualizer-head">
+            <div>
+                <strong id="stepCounter">Step 0 / 0</strong>
+                <span id="stepTitle">Perform an activity to begin.</span>
+            </div>
+            <div id="directionBadge" class="direction">—</div>
+        </div>
+
+        <div class="timeline">
+            <div id="timelineFill"></div>
+        </div>
+
+        <div id="stepCard" class="step-card empty-card">
+            <div class="empty-visual">
+                <div class="big-network">↔</div>
+                <h3>Protocol flow will appear here</h3>
+                <p>The right panel updates when you visit a page, send mail, or play a stream.</p>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="prevBtn" class="secondary" disabled>← Previous</button>
+            <button id="playVizBtn" class="primary" disabled>▶ Play</button>
+            <button id="nextBtn" class="secondary" disabled>Next →</button>
+            <button id="replayBtn" class="secondary" disabled>↻ Replay</button>
+        </div>
+
+        <div class="legend">
+            <span><i class="client-dot"></i> Client</span>
+            <span><i class="server-dot"></i> Server</span>
+            <span><i class="dns-dot"></i> DNS</span>
+            <span><i class="http-dot"></i> HTTP / SMTP</span>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <span>AI-Assisted Development Assignment</span>
+    <span>Simulation is designed to reflect real application-layer message sequences.</span>
+</footer>
+
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
