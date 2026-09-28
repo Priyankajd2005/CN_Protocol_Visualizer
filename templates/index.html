@@ -3,16 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Layer Protocol Visualizer</title>
+    <title>Application & Transport Layer Protocol Visualizer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <header class="topbar">
     <div>
-        <h1>Application Layer Protocol Visualizer</h1>
-        <p>Computer Networks • DNS • HTTP • SMTP</p>
+        <h1>Application & Transport Layer Protocol Visualizer</h1>
+        <p>Computer Networks &bull; DNS &bull; HTTP &bull; SMTP &bull; TCP/UDP Transport Layer</p>
     </div>
-    <div class="badge">SIMULATION MODE</div>
+    <div class="top-badges">
+        <label class="transport-toggle-badge" title="Toggle Transport Layer (TCP/UDP) visualization in all activities">
+            <input type="checkbox" id="includeTransportToggle" checked>
+            <span>+ L4 Transport Layer</span>
+        </label>
+        <div class="badge">SIMULATION MODE</div>
+    </div>
 </header>
 
 <main class="dashboard">
@@ -21,7 +27,7 @@
         <div class="panel-heading">
             <div>
                 <span class="eyebrow">PANEL 01</span>
-                <h2>Activity</h2>
+                <h2>Activity Console</h2>
             </div>
             <span id="statusDot" class="status-dot"></span>
         </div>
@@ -29,50 +35,83 @@
         <div class="activity-tabs">
             <button class="tab active" data-mode="browsing">🌐 Browsing</button>
             <button class="tab" data-mode="mail">✉️ Mail</button>
-            <button class="tab" data-mode="streaming">▶ Streaming</button>
+            <button class="tab" data-mode="streaming">🎬 Streaming</button>
+            <button class="tab" data-mode="transport">⚡ Transport</button>
         </div>
 
+        <!-- 1. Browsing Box -->
         <div id="browsingBox" class="activity-box">
-            <label for="urlInput">URL</label>
+            <label for="urlInput">Target Web URL</label>
             <input id="urlInput" value="https://example.com" placeholder="Enter a URL">
-            <button id="visitBtn" class="primary">Visit Page</button>
-            <p class="hint">Simulates DNS resolution followed by an HTTP request/response.</p>
+            <button id="visitBtn" class="primary">Visit Page & Trace</button>
+            <p class="hint">Simulates: <b>DNS (UDP 53)</b> &rarr; <b>TCP 3-Way Handshake</b> &rarr; <b>HTTP GET / 200 OK</b> &rarr; <b>TCP Teardown</b>.</p>
         </div>
 
+        <!-- 2. Mail Box -->
         <div id="mailBox" class="activity-box hidden">
-            <label for="toInput">To</label>
+            <label for="toInput">To (Recipient)</label>
             <input id="toInput" value="receiver@example.net" placeholder="recipient@example.com">
             <label for="subjectInput">Subject</label>
             <input id="subjectInput" value="Assignment Demo" placeholder="Subject">
             <label for="bodyInput">Body</label>
-            <textarea id="bodyInput" rows="5" placeholder="Write your email...">Hello, this is a simulated email.</textarea>
-            <button id="sendBtn" class="primary">Send Email</button>
-            <p class="hint">Simulates an SMTP conversation: EHLO → MAIL FROM → RCPT TO → DATA → QUIT.</p>
+            <textarea id="bodyInput" rows="4" placeholder="Write your email...">Hello, this is a simulated email.</textarea>
+            <button id="sendBtn" class="primary">Send Email & Trace SMTP</button>
+            <p class="hint">Simulates: <b>DNS MX (UDP 53)</b> &rarr; <b>TCP SYN to Port 25</b> &rarr; <b>Full SMTP Dialogue</b> (EHLO, MAIL FROM, RCPT TO, DATA, QUIT).</p>
         </div>
 
+        <!-- 3. Streaming Box -->
         <div id="streamingBox" class="activity-box hidden">
-            <label for="qualitySelect">Video Quality</label>
+            <label for="qualitySelect">Video Quality / Bitrate</label>
             <select id="qualitySelect">
-                <option>360p</option>
-                <option selected>720p</option>
-                <option>1080p</option>
+                <option>360p (Low Bitrate)</option>
+                <option selected>720p (HD 2.8 Mbps)</option>
+                <option>1080p (Full HD 5.0 Mbps)</option>
             </select>
             <div class="player">
                 <div class="play-icon">▶</div>
                 <div>
-                    <strong>Network Fundamentals — Demo Stream</strong>
+                    <strong>Adaptive HLS Video Stream &bull; Live Chunking</strong>
                     <span id="streamState">Ready to play</span>
                 </div>
             </div>
             <div class="stream-buttons">
-                <button id="playBtn" class="primary">▶ Play</button>
-                <button id="pauseBtn" class="secondary">Ⅱ Pause</button>
+                <button id="playBtn" class="primary">▶ Play Stream</button>
+                <button id="pauseBtn" class="secondary">⏸ Pause</button>
             </div>
-            <p class="hint">Simulates DNS + HTTP manifest/playlist + video segment requests.</p>
+            <p class="hint">Simulates: <b>DNS</b> &rarr; <b>TCP Handshake</b> &rarr; <b>HTTP Master Playlist (.m3u8)</b> &rarr; <b>Video Transport Segments (.ts)</b>.</p>
+        </div>
+
+        <!-- 4. Dedicated Transport Box -->
+        <div id="transportBox" class="activity-box hidden">
+            <label for="transportMode">Transport Layer Scenario</label>
+            <select id="transportMode">
+                <option value="handshake">TCP 3-Way Handshake + Data + 4-Way Teardown</option>
+                <option value="flow">TCP Sliding Window & Flow Control</option>
+                <option value="udp_vs_tcp">TCP (Reliable) vs UDP (Connectionless Fast)</option>
+            </select>
+
+            <div class="transport-grid">
+                <div>
+                    <label for="srcPort">Client Source Port</label>
+                    <input id="srcPort" value="54122" type="number">
+                </div>
+                <div>
+                    <label for="dstPort">Server Port</label>
+                    <input id="dstPort" value="443" type="number">
+                </div>
+            </div>
+
+            <div class="tcp-state-hud">
+                <span class="hud-label">TCP State Machine:</span>
+                <span id="tcpStateBadge" class="tcp-state-badge">CLOSED</span>
+            </div>
+
+            <button id="runTransportBtn" class="primary">Run Transport Simulation</button>
+            <p class="hint">Visualizes raw TCP segment headers: <b>SYN</b>, <b>ACK</b>, <b>PSH</b>, <b>FIN</b>, Sequence/Ack numbers, and TCP state transitions.</p>
         </div>
 
         <div class="activity-log">
-            <div class="section-title">Activity Log</div>
+            <div class="section-title">Client Activity Log</div>
             <div id="activityLog">
                 <div class="empty">Choose an activity and perform it.</div>
             </div>
@@ -84,7 +123,7 @@
         <div class="panel-heading">
             <div>
                 <span class="eyebrow">PANEL 02</span>
-                <h2>Protocol Visualization</h2>
+                <h2>Protocol & Transport Visualizer</h2>
             </div>
             <span id="protocolName" class="protocol-chip">Waiting</span>
         </div>
@@ -94,7 +133,7 @@
                 <strong id="stepCounter">Step 0 / 0</strong>
                 <span id="stepTitle">Perform an activity to begin.</span>
             </div>
-            <div id="directionBadge" class="direction">—</div>
+            <div id="directionBadge" class="direction">Client &rarr; Server</div>
         </div>
 
         <div class="timeline">
@@ -103,31 +142,32 @@
 
         <div id="stepCard" class="step-card empty-card">
             <div class="empty-visual">
-                <div class="big-network">↔</div>
-                <h3>Protocol flow will appear here</h3>
-                <p>The right panel updates when you visit a page, send mail, or play a stream.</p>
+                <div class="big-network">⚡</div>
+                <h3>Protocol & Transport Flow will appear here</h3>
+                <p>The right panel updates with step-by-step Application & Transport layer packets.</p>
             </div>
         </div>
 
         <div class="controls">
-            <button id="prevBtn" class="secondary" disabled>← Previous</button>
-            <button id="playVizBtn" class="primary" disabled>▶ Play</button>
-            <button id="nextBtn" class="secondary" disabled>Next →</button>
-            <button id="replayBtn" class="secondary" disabled>↻ Replay</button>
+            <button id="prevBtn" class="secondary" disabled>◀ Previous</button>
+            <button id="playVizBtn" class="primary" disabled>▶ Auto</button>
+            <button id="nextBtn" class="secondary" disabled>Next ▶</button>
+            <button id="replayBtn" class="secondary" disabled>↺ Replay</button>
         </div>
 
         <div class="legend">
             <span><i class="client-dot"></i> Client</span>
             <span><i class="server-dot"></i> Server</span>
-            <span><i class="dns-dot"></i> DNS</span>
+            <span><i class="dns-dot"></i> DNS (UDP)</span>
             <span><i class="http-dot"></i> HTTP / SMTP</span>
+            <span><i class="tcp-dot"></i> TCP Handshake / Flags</span>
         </div>
     </section>
 </main>
 
 <footer>
-    <span>AI-Assisted Development Assignment</span>
-    <span>Simulation is designed to reflect real application-layer message sequences.</span>
+    <span>AI-Assisted Development &bull; Dual-Panel Protocol & Transport Visualizer</span>
+    <span>Layer 4 (TCP/UDP) & Layer 7 (DNS/HTTP/SMTP) RFC-accurate simulation.</span>
 </footer>
 
 <script src="{{ url_for('static', filename='app.js') }}"></script>

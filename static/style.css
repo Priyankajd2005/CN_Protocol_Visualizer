@@ -197,3 +197,128 @@ footer {
     .topbar, footer { flex-direction: column; align-items: flex-start; }
     .activity-tabs, .controls { grid-template-columns: 1fr 1fr; }
 }
+
+/* Transport Layer Styling Additions */
+.top-badges {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.transport-toggle-badge {
+    background: rgba(59, 130, 246, 0.2);
+    border: 1px solid #3b82f6;
+    color: #93c5fd;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+}
+.transport-toggle-badge input {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+.activity-tabs {
+    grid-template-columns: repeat(4, 1fr) !important;
+}
+.transport-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.tcp-state-hud {
+    background: #06111e;
+    border: 1px solid #203854;
+    padding: 8px 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 12px;
+}
+.tcp-state-badge {
+    background: #4b5563;
+    color: #fff;
+    font-family: monospace;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+.transport-meta-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    background: #081628;
+    border: 1px solid #1e3a5f;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 11px;
+    margin: 10px 0;
+}
+.transport-meta-bar span {
+    color: #cbd5e1;
+}
+.transport-meta-bar code {
+    color: #38bdf8;
+    background: rgba(0,0,0,0.3);
+    padding: 1px 4px;
+    border-radius: 3px;
+}
+.state-hl {
+    color: #34d399;
+}
+.pill-tcp {
+    background: rgba(99, 102, 241, 0.25) !important;
+    color: #a5b4fc !important;
+    border: 1px solid #6366f1 !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+}
+.pill-dns {
+    background: rgba(245, 158, 11, 0.25) !important;
+    color: #fcd34d !important;
+    border: 1px solid #f59e0b !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+}
+.pill-app {
+    background: rgba(59, 130, 246, 0.25) !important;
+    color: #93c5fd !important;
+    border: 1px solid #3b82f6 !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+}
+.tag-hl {
+    background: rgba(59, 130, 246, 0.15);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    color: #93c5fd;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-family: monospace;
+}
+.tcp-dot {
+    background: #818cf8 !important;
+}
+.arrow-c2s {
+    color: #38bdf8 !important;
+}
+.arrow-s2c {
+    color: #34d399 !important;
+}
+.step-footer {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #94a3b8;
+}
+@media (max-width: 600px) {
+    .activity-tabs {
+        grid-template-columns: 1fr 1fr !important;
+    }
+}
